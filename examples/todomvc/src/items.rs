@@ -34,6 +34,9 @@ impl Item {
         } else {
             self.task.clone()
         };
+
+        println!("INDEX OF \"{}\" is {} ", self.task, index);
+
         gtk! {
             <ListBoxRow>
                 <Box spacing=10 orientation=Orientation::Horizontal>

@@ -81,8 +81,12 @@ impl Model {
                 <ScrolledWindow Box::expand=true Box::fill=true>
                     <ListBox selection_mode=SelectionMode::None>
                         {
-                            self.filter(self.filter).enumerate()
-                                .map(|(index, item)| item.render(index))
+                            self.items.iter().enumerate().filter(|(_, item)| match self.filter {
+                                Filter::All => true,
+                                Filter::Active => !item.done,
+                                Filter::Completed => item.done,
+                            })
+                            .map(|(index, item)| item.render(index))
                         }
                     </ListBox>
                 </ScrolledWindow>
@@ -151,6 +155,7 @@ impl Component for Model {
                 self.clean = false;
             }
             Msg::Toggle { index } => {
+                println!("TOGGLE {}", index);
                 Arc::make_mut(&mut self.items)[index].done = !self.items[index].done;
                 self.clean = false;
             }
